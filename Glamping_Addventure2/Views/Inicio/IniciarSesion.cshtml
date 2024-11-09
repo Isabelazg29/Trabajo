@@ -1,0 +1,172 @@
+﻿@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Iniciar Sesión</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 99%, #dcedc1 100%);
+        }
+
+        .login-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 360px;
+            text-align: center;
+            position: relative;
+        }
+
+        .icon-container {
+            position: absolute;
+            top: -60px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1a4a5a; /* Verde oscuro del encabezado */
+            border-radius: 50%;
+            padding: 10px;
+            width: 80px;
+            height: 80px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+            .icon-container i {
+                font-size: 40px;
+                color: #fff;
+            }
+
+        .login-box h1 {
+            margin-top: 20px;
+            margin-bottom: 20px;
+            color: #1a4a5a; /* Verde oscuro */
+            font-size: 24px;
+        }
+
+        .textbox {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+            .textbox input {
+                width: 100%;
+                padding: 15px 40px 15px 15px;
+                border: none;
+                border-radius: 8px;
+                background: #f1f1f1;
+                font-size: 16px;
+                color: #1a4a5a; /* Verde oscuro */
+            }
+
+            .textbox i {
+                position: absolute;
+                right: 15px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: #666;
+            }
+
+        .remember-me a {
+            color: #1a4a5a; /* Verde oscuro */
+            text-decoration: none;
+        }
+
+            .remember-me a:hover {
+                text-decoration: underline;
+            }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #1a4a5a; /* Verde oscuro */
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+            .btn:hover {
+                background: #055e05;
+            }
+
+        .register-link {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+            .register-link a {
+                color: #1a4a5a; /* Verde oscuro */
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+                .register-link a:hover {
+                    text-decoration: underline;
+                }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <div class="icon-container">
+            <i class="fas fa-user-circle"></i>
+        </div>
+        <h1>Iniciar Sesión</h1>
+        <form asp-controller="Inicio" asp-action="IniciarSesion" method="post">
+            <div class="textbox">
+                <input type="text" name="email" placeholder="Email" required />
+                <i class="fas fa-user"></i>
+            </div>
+            <div class="textbox">
+                <input type="password" name="contrasena" placeholder="Password" required />
+                <i class="fas fa-lock"></i>
+            </div>
+            <div class="remember-me">
+                <a href="@Url.Action("SolicitarRecuperacion", "Recuperacion")">¿Olvidaste tu contraseña?</a>
+            </div>
+
+            <button class="btn" type="submit">Ingresa</button>
+
+            @if (ViewData["Mensaje"] != null)
+            {
+                <div class="form-group mt-3">
+                    <div class="alert alert-danger" role="alert">
+                        @ViewData["Mensaje"]
+                    </div>
+                </div>
+            }
+
+            <div class="register-link">
+                ¿No tienes una cuenta? <a href="@Url.Action("Registrarse", "Inicio")">Regístrate</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

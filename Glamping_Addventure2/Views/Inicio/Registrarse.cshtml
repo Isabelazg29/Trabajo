@@ -1,0 +1,245 @@
+﻿@model Glamping_Addventure2.Models.Usuario
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Registrarse</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+            margin: 0;
+            padding: 0;
+        }
+
+        .register-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 900px;
+            max-width: 90%;
+            text-align: center;
+        }
+
+            .register-box h1 {
+                color: #333;
+                font-size: 24px;
+                margin-bottom: 30px;
+            }
+
+        .form-group {
+            margin-bottom: 20px;
+            flex: 1;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .form-control {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background: #f9f9f9;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            background: #1a4a5a;
+            color: #fff;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+        }
+
+            .btn-submit:hover {
+                background: #055e05;
+            }
+
+        .register-link {
+            margin-top: 20px;
+            font-size: 14px;
+            color: #666;
+        }
+
+            .register-link a {
+                color: #1a4a5a;
+                text-decoration: none;
+                font-weight: bold;
+            }
+
+                .register-link a:hover {
+                    text-decoration: underline;
+                }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="register-box">
+        <h1>Registrarse</h1>
+        <form id="registroForm" asp-controller="Inicio" asp-action="Registrarse" method="post" novalidate>
+            @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="TipoDocumento">Tipo de Documento</label>
+                    <select class="form-control" asp-for="TipoDocumento" required>
+                        <option value="">Seleccione el tipo de documento</option>
+                        <option value="DNI">T.I</option>
+                        <option value="Pasaporte">Pasaporte</option>
+                        <option value="Cedula">Cédula de Ciudadanía</option>
+                        <option value="CedulaEx">Cédula Extranjera</option>
+                    </select>
+                    <div class="error-message" id="errorTipoDocumento"></div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="NumeroDocumento">Número de Documento</label>
+                    <input class="form-control" type="text" asp-for="NumeroDocumento" placeholder="Número de documento" pattern="^\d{1,10}$" required />
+                    <div class="error-message" id="errorNumeroDocumento"></div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="NombreUsuario">Nombre</label>
+                    <input class="form-control" type="text" asp-for="NombreUsuario" placeholder="Nombre" pattern="[A-Za-z]+" required />
+                    @Html.ValidationMessageFor(model => model.NombreUsuario, "", new { @class = "error-message" })
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Apellido">Apellido</label>
+                    <input class="form-control" type="text" asp-for="Apellido" placeholder="Apellido" pattern="[A-Za-z]+" required />
+                    @Html.ValidationMessageFor(model => model.Apellido, "", new { @class = "error-message" })
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="Pais">País</label>
+                    <select id="Pais" class="form-control" asp-for="Pais" required>
+                        <option value="">Seleccione su país</option>
+                    </select>
+                    <div class="error-message" id="errorPais"></div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Direccion">Dirección</label>
+                    <input class="form-control" type="text" asp-for="Direccion" placeholder="Dirección" required />
+                    <div class="error-message" id="errorDireccion"></div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Telefono">Teléfono</label>
+                    <input class="form-control" type="text" asp-for="Telefono" placeholder="Teléfono" pattern="^\d{1,10}$" required />
+                    <div class="error-message" id="errorTelefono"></div>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Idrol">Rol</label>
+                    <select class="form-control" asp-for="Idrol" required>
+                        <option value="">Seleccione el tipo de rol</option>
+                        <option value="9">Administrador</option>
+                        <option value="7">Recepcionista</option>
+                    </select>
+                    <div class="error-message" id="errorIdrol"></div>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="Email">Correo Electrónico</label>
+                    <input class="form-control" type="email" asp-for="Email" placeholder="Correo Electrónico" required />
+                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "error-message" })
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Contrasena">Contraseña</label>
+                    <input class="form-control" type="password" asp-for="Contrasena" placeholder="Contraseña" required
+                           pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$" />
+                    @Html.ValidationMessageFor(model => model.Contrasena, "", new { @class = "error-message" })
+                </div>
+
+                <div class="form-group">
+                    <label for="ConfirmarContrasena">Confirmar Contraseña</label>
+                    <input class="form-control" type="password" id="ConfirmarContrasena" name="confirmarContrasena" placeholder="Confirmar Contraseña" required />
+                    <span class="error-message" id="errorConfirmarContrasena"></span>
+                </div>
+            </div>
+
+            @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
+
+            <div class="d-grid gap-2 mb-3">
+                <button class="btn-submit" type="submit">Registrar</button>
+            </div>
+
+            ¿Ya tienes una cuenta? <a href="@Url.Action("IniciarSesion", "Inicio")">Iniciar Sesión</a>
+        </form>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            // Poblado dinámico de países con la API
+            fetch('https://restcountries.com/v3.1/all')
+                .then(response => response.json())
+                .then(data => {
+                    const paisSelect = $('#Pais');
+                    data.forEach(pais => {
+                        paisSelect.append(new Option(pais.name.common, pais.name.common));
+                    });
+                });
+
+            $('#registroForm').on('submit', function (event) {
+                // Aplicar validación visual de Bootstrap
+                $(this).addClass('was-validated');
+
+                // Validar confirmación de contraseña
+                const password = $('input[name="Contrasena"]').val();
+                const confirmPassword = $('#ConfirmarContrasena').val();
+
+                if (password !== confirmPassword) {
+                    event.preventDefault(); // Evitar envío del formulario
+                    $('#errorConfirmarContrasena').text('Las contraseñas no coinciden.');
+                } else {
+                    $('#errorConfirmarContrasena').text(''); // Limpiar el mensaje de error
+                }
+
+                // Validación de solo letras para NombreUsuario y Apellido
+                const nombreUsuario = $('input[name="NombreUsuario"]').val();
+                const apellido = $('input[name="Apellido"]').val();
+
+                if (!/^[A-Za-z]+$/.test(nombreUsuario)) {
+                    event.preventDefault();
+                    alert('El nombre de usuario solo puede contener letras.');
+                }
+
+                if (!/^[A-Za-z]+$/.test(apellido)) {
+                    event.preventDefault();
+                    alert('El apellido solo puede contener letras.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

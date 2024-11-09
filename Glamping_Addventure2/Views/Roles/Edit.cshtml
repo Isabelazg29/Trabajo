@@ -1,0 +1,153 @@
+﻿@model Glamping_Addventure2.Models.Role
+
+@{
+    ViewData["Title"] = "Editar Rol";
+}
+
+<div class="container mt-4" style="max-width: 1000px;">
+    <h2 class="text-center" style="color: #1a4a5a;">Editar Rol</h2>
+
+    <form asp-action="Edit" method="post" class="mt-4">
+        <input type="hidden" asp-for="Idrol" />
+
+        <!-- Campo Nombre y Buscador en la misma fila -->
+        <div class="row mb-3 align-items-end">
+            <div class="col-md-6">
+                <label asp-for="Nombre" class="form-label">Nombre del Rol</label>
+                <input asp-for="Nombre" class="form-control form-control-sm" placeholder="Ingrese el nombre del rol" />
+                <span asp-validation-for="Nombre" class="text-danger"></span>
+            </div>
+            <div class="col-md-6">
+                <label for="permissionSearch" class="form-label">Buscar Permiso</label>
+                <input type="text" id="permissionSearch" class="form-control form-control-sm" placeholder="Buscar permisos..." onkeyup="filterPermissions()" />
+            </div>
+        </div>
+
+        <!-- Sección de Seleccionar todo y Permisos -->
+        <div class="col-md-12 mb-3">
+            <div class="form-check mb-2">
+                <input type="checkbox" id="selectAll" class="form-check-input" onclick="toggleSelectAll()" />
+                <label for="selectAll" class="form-check-label">Seleccionar todo</label>
+            </div>
+            <label class="form-label">Permisos:</label>
+            <div class="permissions-container p-3">
+                <div class="row" id="permissionsList">
+                    @for (int i = 0; i < ViewBag.Permisos.Count; i++)
+                    {
+                        <div class="col-6 col-md-3 mb-2 d-flex align-items-center permission-item">
+                            <label class="switch me-2">
+                                <input type="checkbox" class="permiso-checkbox" name="selectedPermisos" value="@ViewBag.Permisos[i].Idpermiso"
+                                @(ViewBag.PermisosAsignados.Contains(ViewBag.Permisos[i].Idpermiso) ? "checked" : "") />
+                                <span class="slider round"></span>
+                            </label>
+                            <label class="form-check-label permiso-nombre" style="font-size: 0.9rem;">@ViewBag.Permisos[i].NombrePermisos</label>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+
+        <!-- Botones alineados y centrados -->
+        <div class="d-flex justify-content-center mt-3 gap-2">
+            <button type="submit" class="btn btn-success btn-sm">Editar Rol</button>
+            <a asp-action="Index" class="btn btn-secondary btn-sm">Cancelar</a>
+        </div>
+    </form>
+</div>
+
+<!-- Estilos adicionales -->
+<style>
+    /* Contenedor general */
+    .container {
+        background-color: #ffffff;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Toggle switch */
+    .switch {
+        position: relative;
+        display: inline-block;
+        width: 40px;
+        height: 20px;
+    }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+    .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #ccc;
+        transition: .4s;
+        border-radius: 20px;
+    }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+    input:checked + .slider {
+        background-color: #66bb6a;
+    }
+
+        input:checked + .slider:before {
+            transform: translateX(20px);
+        }
+
+    /* Permisos y botones */
+    .permissions-container {
+        max-height: 130px;
+        overflow-y: auto;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        background-color: #f9f9f9;
+    }
+
+    .btn-sm {
+        padding: 6px 12px;
+        font-size: 0.875rem;
+    }
+
+    .btn:hover {
+        opacity: 0.8;
+    }
+</style>
+
+<!-- Scripts para el buscador y seleccionar todo -->
+<script>
+    function filterPermissions() {
+        const searchValue = document.getElementById("permissionSearch").value.toLowerCase();
+        const permissions = document.querySelectorAll(".permission-item");
+
+        permissions.forEach(permission => {
+            const permissionName = permission.querySelector(".permiso-nombre").innerText.toLowerCase();
+            permission.style.display = permissionName.includes(searchValue) ? "flex" : "none";
+        });
+    }
+
+    function toggleSelectAll() {
+        const selectAllCheckbox = document.getElementById("selectAll");
+        const checkboxes = document.querySelectorAll(".permiso-checkbox");
+
+        checkboxes.forEach(checkbox => {
+            checkbox.checked = selectAllCheckbox.checked;
+        });
+    }
+</script>

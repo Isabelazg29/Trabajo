@@ -1,0 +1,151 @@
+﻿@model IEnumerable<Glamping_Addventure2.Models.Usuario>
+
+<div class="container">
+    <h2 class="text-center" style="color: #1a4a5a;">Lista de Usuarios</h2> <!-- Título centrado y con color -->
+
+    <div class="d-flex justify-content-end mb-3">
+        <a asp-action="Registrarse" asp-controller="Inicio" class="btn btn-success btn-sm">
+            <i class="fas fa-plus"></i> Agregar Usuario
+        </a>
+    </div>
+
+    <!-- Enlace para cargar Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+
+    <table id="myTable" class="table table-bordered table-striped shadow">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Email</th>
+                <th>Tipo de Documento</th>
+                <th>Número de Documento</th>
+                <th>Teléfono</th>
+                <th>Dirección</th>
+                <th>Rol</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var usuario in Model)
+            {
+                <tr>
+                    <td>@usuario.NombreUsuario</td>
+                    <td>@usuario.Apellido</td>
+                    <td>@usuario.Email</td>
+                    <td>@usuario.TipoDocumento</td>
+                    <td>@usuario.NumeroDocumento</td>
+                    <td>@usuario.Telefono</td>
+                    <td>@usuario.Direccion</td>
+                    <td>@usuario.IdrolNavigation?.Nombre</td>
+                    <td>
+                        <a asp-action="Edit" asp-controller="Usuarios" asp-route-id="@usuario.Idusuario" class="btn btn-success btn-sm">
+                            <i class="fas fa-pencil-alt"></i>
+                        </a>
+                        <a asp-action="Delete" asp-controller="Usuarios" asp-route-id="@usuario.Idusuario" class="btn btn-danger btn-sm">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+
+<!-- Enlaces de DataTables -->
+<link rel="stylesheet" href="https://cdn.datatables.net/1.13.5/css/jquery.dataTables.min.css">
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://cdn.datatables.net/1.13.5/js/jquery.dataTables.min.js"></script>
+
+<script>
+    $(document).ready(function () {
+        $('#myTable').DataTable({
+            "paging": true,
+            "searching": true,
+            "ordering": true,
+            "pageLength": 5,
+        });
+    });
+</script>
+
+<style>
+    /* Fondo del sitio */
+    body {
+        font-family: Arial, sans-serif;
+        background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+        color: #1a4a5a;
+    }
+
+    /* Contenedor principal */
+    .container {
+        max-width: 1100px;
+        background-color: #ffffff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Tabla de datos */
+    table {
+        width: 100%;
+        margin-top: 20px;
+        border-collapse: collapse;
+        background-color: #f8f9fa;
+    }
+
+    /* Encabezado de la tabla */
+    th {
+        background-color: #1a4a5a;
+        color: #000000;
+        font-weight: bold;
+        padding: 12px;
+        border: 1px solid #dcdcdc;
+    }
+
+    /* Celdas de datos */
+    td {
+        background-color: #ffffff;
+        color: #1a4a5a;
+        padding: 12px;
+        text-align: center;
+        border: 1px solid #e3e3e3;
+        transition: background-color 0.3s ease;
+    }
+
+    /* Filas alternas */
+    tbody tr:nth-child(odd) td {
+        background-color: #e9f7ec;
+    }
+
+    /* Efecto hover */
+    tbody tr:hover td {
+        background-color: #c8e6c9;
+    }
+
+    /* Estilos de botones */
+    .btn {
+        font-weight: bold;
+        color: #ffffff;
+        border-radius: 5px;
+        padding: 5px 10px;
+        transition: opacity 0.3s ease;
+    }
+
+    .btn-success {
+        background-color: #28a745;
+        border: none;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+    }
+
+    .btn i {
+        margin-right: 4px;
+    }
+
+    .btn:hover {
+        opacity: 0.85;
+    }
+</style>

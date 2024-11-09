@@ -1,0 +1,103 @@
+﻿@model Glamping_Addventure2.Models.Usuario
+
+@{
+    ViewData["Title"] = "Eliminar Usuario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8" />
+    <title>Eliminar Usuario</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        /* Diseño principal */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Ocupa el 100% de la altura de la ventana */
+            margin: 0; /* Elimina el margen del body */
+            padding: 0; /* Elimina el padding del body */
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%); /* Fondo con degradado */
+        }
+
+        .delete-box {
+            background: rgba(255, 255, 255, 0.9); /* Fondo semi-transparente */
+            padding: 40px; /* Espaciado interno */
+            border-radius: 16px; /* Bordes redondeados */
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Sombra para profundidad */
+            width: 100%; /* Ancho completo */
+            max-width: 1200px; /* Ancho máximo */
+            text-align: center; /* Centrado del texto */
+        }
+
+        h1 {
+            color: #333; /* Color del título */
+            font-size: 24px; /* Tamaño del título */
+            margin-bottom: 20px; /* Margen inferior */
+        }
+
+        h3 {
+            font-size: 18px; /* Tamaño de la pregunta */
+            margin-bottom: 20px; /* Margen inferior */
+            color: #555; /* Color de la pregunta */
+        }
+
+        dl.row {
+            margin-bottom: 20px; /* Margen inferior */
+            text-align: left; /* Alineación izquierda */
+        }
+
+        .btn-danger {
+            background-color: #d9534f; /* Color de fondo del botón eliminar */
+            color: #fff; /* Color del texto */
+            border: none; /* Sin borde */
+            transition: background 0.3s ease; /* Transición suave */
+        }
+
+            .btn-danger:hover {
+                background-color: #c9302c; /* Color de fondo al pasar el mouse */
+            }
+
+        .btn-secondary {
+            background: #6c757d; /* Color de fondo del botón cancelar */
+            color: #fff; /* Color del texto */
+        }
+
+            .btn-secondary:hover {
+                background: #5a6268; /* Color de fondo al pasar el mouse */
+            }
+    </style>
+</head>
+<body>
+    <div class="delete-box">
+        <h1>Eliminar Usuario</h1>
+        <h3>¿Está seguro de que desea eliminar este usuario?</h3>
+
+        <div>
+            <h4>Usuario</h4>
+            <hr />
+            <dl class="row">
+                <dt class="col-sm-4">Nombre de Usuario</dt>
+                <dd class="col-sm-8">@Model.NombreUsuario</dd>
+                <dt class="col-sm-4">Correo Electrónico</dt>
+                <dd class="col-sm-8">@Model.Email</dd>
+            </dl>
+        </div>
+
+        <form asp-action="Delete" method="post">
+            <input type="hidden" asp-for="Idusuario" />
+            <div class="d-flex justify-content-center mt-3">
+                <button type="submit" class="btn btn-danger me-2">Eliminar</button>
+                <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

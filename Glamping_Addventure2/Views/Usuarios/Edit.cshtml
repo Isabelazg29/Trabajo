@@ -1,0 +1,161 @@
+﻿@model Glamping_Addventure2.Models.Usuario
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Editar Usuario</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <style>
+        /* Diseño principal */
+        body {
+            font-family: Arial, sans-serif;
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            padding: 0;
+        }
+
+        .edit-box {
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 1000px; /* Controla el ancho máximo del contenedor */
+            text-align: center;
+            margin: 0 auto; /* Asegura que esté centrado horizontalmente */
+        }
+
+        h1 {
+            color: #333;
+            font-size: 24px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            flex: 1;
+        }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .form-control {
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid #ddd;
+            background: #f9f9f9;
+        }
+
+        /* Estilos para los botones */
+        .btn-submit {
+            background: #055e05;
+            color: #fff;
+            border: none;
+            transition: background 0.3s ease;
+        }
+
+            .btn-submit:hover {
+                background: #055e05;
+            }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: #fff;
+        }
+
+            .btn-secondary:hover {
+                background: #5a6268;
+            }
+
+        .text-danger {
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="edit-box">
+        <h1>Editar Usuario</h1>
+        <form asp-action="Edit" method="post">
+            <input type="hidden" asp-for="Idusuario" />
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="NombreUsuario">Nombre</label>
+                    <input asp-for="NombreUsuario" class="form-control" />
+                    <span asp-validation-for="NombreUsuario" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Apellido">Apellido</label>
+                    <input asp-for="Apellido" class="form-control" />
+                    <span asp-validation-for="Apellido" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Email">Correo Electrónico</label>
+                    <input asp-for="Email" class="form-control" readonly />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="TipoDocumento">Tipo de Documento</label>
+                    <select asp-for="TipoDocumento" class="form-control">
+                        <option value="">Seleccione el tipo de documento</option>
+                        <option value="DNI">T.I</option>
+                        <option value="Pasaporte">Pasaporte</option>
+                        <option value="Cedula">Cédula de Ciudadanía</option>
+                        <option value="CedulaEx">Cédula Extranjera</option>
+                    </select>
+                    <span asp-validation-for="TipoDocumento" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="NumeroDocumento">Número de Documento</label>
+                    <input asp-for="NumeroDocumento" class="form-control" />
+                    <span asp-validation-for="NumeroDocumento" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Direccion">Dirección</label>
+                    <input asp-for="Direccion" class="form-control" />
+                    <span asp-validation-for="Direccion" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Telefono">Teléfono</label>
+                    <input asp-for="Telefono" class="form-control" />
+                    <span asp-validation-for="Telefono" class="text-danger"></span>
+                </div>
+
+                <div class="form-group">
+                    <label asp-for="Idrol">Rol</label>
+                    <select asp-for="Idrol" class="form-control">
+                        <option value="">Seleccione el tipo de rol</option>
+                        <option value="9">Administrador</option>
+                        <option value="7">Recepcionista</option>
+                    </select>
+                    <span asp-validation-for="Idrol" class="text-danger"></span>
+                </div>
+            </div>
+
+            <div class="d-flex justify-content-center mt-3">
+                <button type="submit" class="btn btn-submit btn-small">Actualizar</button>
+                <a asp-action="Index" class="btn btn-secondary btn-small ms-2">Cancelar</a>
+            </div>
+        </form>
+    </div>
+
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
