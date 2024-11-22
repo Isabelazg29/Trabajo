@@ -8,7 +8,6 @@ public partial class RolesPermiso
     public int IdrolPermiso { get; set; }
 
     public int? Idrol { get; set; }
-
     public int? Idpermiso { get; set; }
 
     public virtual Permiso? IdpermisoNavigation { get; set; }

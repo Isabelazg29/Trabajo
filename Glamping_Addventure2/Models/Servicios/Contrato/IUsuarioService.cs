@@ -13,5 +13,7 @@ namespace Glamping_Addventure.Models.Servicios.Contrato
 
         Task<Usuario> GetUsuarioPorDocumento(int? numeroDocumento);
 
+        Task<Role> GetRolPorId(int Idrol);
+
     }
 }

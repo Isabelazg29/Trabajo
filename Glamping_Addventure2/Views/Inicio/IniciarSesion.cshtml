@@ -10,8 +10,7 @@
     <title>Iniciar Sesión</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
-
-    <style>
+ <style>
         * {
             margin: 0;
             padding: 0;
@@ -19,19 +18,19 @@
         }
 
         body {
-            font-family: Arial, sans-serif;
+            font-family: 'Roboto', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 99%, #dcedc1 100%);
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
         }
 
         .login-box {
-            background: rgba(255, 255, 255, 0.9);
+            background: #ffffff;
             padding: 40px;
             border-radius: 16px;
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
             width: 360px;
             text-align: center;
             position: relative;
@@ -42,27 +41,28 @@
             top: -60px;
             left: 50%;
             transform: translateX(-50%);
-            background: #1a4a5a; /* Verde oscuro del encabezado */
+            background: #1a4a5a;
             border-radius: 50%;
-            padding: 10px;
-            width: 80px;
-            height: 80px;
+            padding: 15px;
+            width: 90px;
+            height: 90px;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
-            .icon-container i {
-                font-size: 40px;
-                color: #fff;
-            }
+        .icon-container i {
+            font-size: 42px;
+            color: #fff;
+        }
 
         .login-box h1 {
-            margin-top: 20px;
-            margin-bottom: 20px;
-            color: #1a4a5a; /* Verde oscuro */
+            margin-top: 40px;
+            margin-bottom: 30px;
+            color: #1a4a5a;
             font-size: 24px;
+            font-weight: 700;
         }
 
         .textbox {
@@ -70,48 +70,62 @@
             position: relative;
         }
 
-            .textbox input {
-                width: 100%;
-                padding: 15px 40px 15px 15px;
-                border: none;
-                border-radius: 8px;
-                background: #f1f1f1;
-                font-size: 16px;
-                color: #1a4a5a; /* Verde oscuro */
-            }
-
-            .textbox i {
-                position: absolute;
-                right: 15px;
-                top: 50%;
-                transform: translateY(-50%);
-                color: #666;
-            }
-
-        .remember-me a {
-            color: #1a4a5a; /* Verde oscuro */
-            text-decoration: none;
+        .textbox input {
+            width: 100%;
+            padding: 15px 50px 15px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: #f9f9f9;
+            font-size: 16px;
+            color: #1a4a5a;
+            transition: border 0.3s;
         }
 
-            .remember-me a:hover {
-                text-decoration: underline;
-            }
+        .textbox input:focus {
+            border-color: #1a4a5a;
+            outline: none;
+            background: #ffffff;
+        }
+
+        .textbox i {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+            font-size: 18px;
+        }
 
         .btn {
             width: 100%;
             padding: 15px;
             border: none;
             border-radius: 8px;
-            background: #1a4a5a; /* Verde oscuro */
+            background: #1a4a5a;
             color: #fff;
             font-size: 18px;
+            font-weight: 600;
             cursor: pointer;
             transition: background 0.3s ease;
         }
 
-            .btn:hover {
-                background: #055e05;
-            }
+        .btn:hover {
+            background: #055e05;
+        }
+
+        .remember-me {
+            margin-top: 15px;
+        }
+
+        .remember-me a {
+            color: #1a4a5a;
+            font-size: 14px;
+            text-decoration: none;
+        }
+
+        .remember-me a:hover {
+            text-decoration: underline;
+        }
 
         .register-link {
             margin-top: 20px;
@@ -119,15 +133,20 @@
             color: #666;
         }
 
-            .register-link a {
-                color: #1a4a5a; /* Verde oscuro */
-                text-decoration: none;
-                font-weight: bold;
-            }
+        .register-link a {
+            color: #1a4a5a;
+            text-decoration: none;
+            font-weight: bold;
+        }
 
-                .register-link a:hover {
-                    text-decoration: underline;
-                }
+        .register-link a:hover {
+            text-decoration: underline;
+        }
+
+        .alert {
+            font-size: 14px;
+            margin-top: 15px;
+        }
     </style>
 </head>
 <body>
@@ -145,9 +164,7 @@
                 <input type="password" name="contrasena" placeholder="Password" required />
                 <i class="fas fa-lock"></i>
             </div>
-            <div class="remember-me">
-                <a href="@Url.Action("SolicitarRecuperacion", "Recuperacion")">¿Olvidaste tu contraseña?</a>
-            </div>
+           
 
             <button class="btn" type="submit">Ingresa</button>
 
@@ -160,6 +177,9 @@
                 </div>
             }
 
+			<div class="remember-me">
+				<a href="@Url.Action("SolicitarRecuperacion", "Recuperacion")">¿Olvidaste tu contraseña?</a>
+			</div>
             <div class="register-link">
                 ¿No tienes una cuenta? <a href="@Url.Action("Registrarse", "Inicio")">Regístrate</a>
             </div>

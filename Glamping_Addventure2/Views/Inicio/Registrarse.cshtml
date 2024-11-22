@@ -9,7 +9,7 @@
     <meta name="viewport" content="width=device-width" />
     <title>Registrarse</title>
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -93,6 +93,13 @@
             font-size: 14px;
             margin-top: 5px;
         }
+
+        .required::after {
+            content: " *";
+            color: red;
+            font-weight: bold;
+            }
+
     </style>
 </head>
 <body>
@@ -101,92 +108,118 @@
         <form id="registroForm" asp-controller="Inicio" asp-action="Registrarse" method="post" novalidate>
             @Html.ValidationSummary(true, "", new { @class = "alert alert-danger" })
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label asp-for="TipoDocumento">Tipo de Documento</label>
-                    <select class="form-control" asp-for="TipoDocumento" required>
-                        <option value="">Seleccione el tipo de documento</option>
-                        <option value="DNI">T.I</option>
-                        <option value="Pasaporte">Pasaporte</option>
-                        <option value="Cedula">Cédula de Ciudadanía</option>
-                        <option value="CedulaEx">Cédula Extranjera</option>
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label asp-for="Idrol" class="required">Rol</label>
+                    <select class="form-control" asp-for="Idrol" required>
+                        <option value="">Seleccione el tipo de rol</option>
+                        <option value="1">Administrador</option>
+                        <option value="2">Recepcionista</option>
                     </select>
-                    <div class="error-message" id="errorTipoDocumento"></div>
+                    <div class="error-message" id="errorIdrol"></div>
                 </div>
 
-                <div class="form-group">
-                    <label asp-for="NumeroDocumento">Número de Documento</label>
-                    <input class="form-control" type="text" asp-for="NumeroDocumento" placeholder="Número de documento" pattern="^\d{1,10}$" required />
+
+                <div class="form-group col-md-3">
+                    <label asp-for="NumeroDocumento" class="required">Número de Documento</label>
+                    <input class="form-control" type="text" asp-for="NumeroDocumento" placeholder="Número de documento" required maxlength="10" />
                     <div class="error-message" id="errorNumeroDocumento"></div>
                 </div>
 
-                <div class="form-group">
-                    <label asp-for="NombreUsuario">Nombre</label>
-                    <input class="form-control" type="text" asp-for="NombreUsuario" placeholder="Nombre" pattern="[A-Za-z]+" required />
-                    @Html.ValidationMessageFor(model => model.NombreUsuario, "", new { @class = "error-message" })
+                <div class="form-group col-md-3">
+                    <label asp-for="NombreUsuario" class="required">Nombre</label>
+                    <input class="form-control" type="text" asp-for="NombreUsuario" placeholder="Nombre" required />
+                    <div class="error-message" id="errorNombreUsuario"></div>
                 </div>
 
-                <div class="form-group">
-                    <label asp-for="Apellido">Apellido</label>
-                    <input class="form-control" type="text" asp-for="Apellido" placeholder="Apellido" pattern="[A-Za-z]+" required />
-                    @Html.ValidationMessageFor(model => model.Apellido, "", new { @class = "error-message" })
+                <div class="form-group col-md-3">
+                    <label asp-for="Apellido" class="required">Apellido</label>
+                    <input class="form-control" type="text" asp-for="Apellido" placeholder="Apellido" required />
+                    <div class="error-message" id="errorApellido"></div>
                 </div>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label for="Pais">País</label>
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label asp-for="Pais" class="required">País</label>
                     <select id="Pais" class="form-control" asp-for="Pais" required>
                         <option value="">Seleccione su país</option>
+                        <option value="Colombia">Colombia</option>
+                        <option value="Estados Unidos">Estados Unidos</option>
+                        <option value="España">España</option>
+                        <option value="México">México</option>
                     </select>
                     <div class="error-message" id="errorPais"></div>
                 </div>
 
-                <div class="form-group">
-                    <label asp-for="Direccion">Dirección</label>
+                <div class="form-group col-md-3">
+                    <label for="Ciudad" class="required">Ciudad</label>
+                    <select id="Ciudad" class="form-control" name="Ciudad" required>
+                        <option value="">Seleccione una ciudad</option>
+                    </select>
+                    <div class="error-message" id="errorCiudad"></div>
+                </div>
+
+                <div class="form-group col-md-3">
+                    <label asp-for="Direccion" class="required">Dirección</label>
                     <input class="form-control" type="text" asp-for="Direccion" placeholder="Dirección" required />
                     <div class="error-message" id="errorDireccion"></div>
                 </div>
 
-                <div class="form-group">
-                    <label asp-for="Telefono">Teléfono</label>
-                    <input class="form-control" type="text" asp-for="Telefono" placeholder="Teléfono" pattern="^\d{1,10}$" required />
+                <div class="form-group col-md-3">
+                    <label asp-for="Telefono" class="required">Teléfono</label>
+                    <input class="form-control" type="text" asp-for="Telefono" placeholder="Teléfono" required maxlength="10" />
                     <div class="error-message" id="errorTelefono"></div>
-                </div>
-
-                <div class="form-group">
-                    <label asp-for="Idrol">Rol</label>
-                    <select class="form-control" asp-for="Idrol" required>
-                        <option value="">Seleccione el tipo de rol</option>
-                        <option value="9">Administrador</option>
-                        <option value="7">Recepcionista</option>
-                    </select>
-                    <div class="error-message" id="errorIdrol"></div>
                 </div>
             </div>
 
-            <div class="form-row">
-                <div class="form-group">
-                    <label asp-for="Email">Correo Electrónico</label>
+            <div class="row">
+                <div class="form-group col-md-3">
+                    <label asp-for="Idrol" class="required">Rol</label>
+                    <select class="form-control" asp-for="Idrol" required>
+                        <option value="">Seleccione el tipo de rol</option>
+                        @foreach (var rol in ViewBag.Roles)
+
+                        {
+
+                            if (rol.IsActive)
+
+                            {
+                                <option value="@rol.Idrol">@rol.Nombre</option>
+                            }
+
+                            else
+
+                            {
+                                <option value="@rol.Idrol" disabled>@rol.Nombre</option>
+                            }
+
+                        }
+                        <option value="1">Administrador</option>
+                        <option value="2">Recepcionista</option>
+                    </select>
+                    <div class="error-message" id="errorIdrol"></div>
+                </div>
+                
+
+                <div class="form-group col-md-3">
+                    <label asp-for="Email" class="required">Correo Electrónico</label>
                     <input class="form-control" type="email" asp-for="Email" placeholder="Correo Electrónico" required />
-                    @Html.ValidationMessageFor(model => model.Email, "", new { @class = "error-message" })
+                    <div class="error-message" id="errorEmail"></div>
                 </div>
 
-                <div class="form-group">
-                    <label asp-for="Contrasena">Contraseña</label>
-                    <input class="form-control" type="password" asp-for="Contrasena" placeholder="Contraseña" required
-                           pattern="^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{8,}$" />
-                    @Html.ValidationMessageFor(model => model.Contrasena, "", new { @class = "error-message" })
+                <div class="form-group col-md-3">
+                    <label asp-for="Contrasena" class="required">Contraseña</label>
+                    <input class="form-control" type="password" asp-for="Contrasena" placeholder="Contraseña" required />
+                    <div class="error-message" id="errorContrasena"></div>
                 </div>
 
-                <div class="form-group">
-                    <label for="ConfirmarContrasena">Confirmar Contraseña</label>
+                <div class="form-group col-md-3">
+                    <label for="ConfirmarContrasena" class="required">Confirmar Contraseña</label>
                     <input class="form-control" type="password" id="ConfirmarContrasena" name="confirmarContrasena" placeholder="Confirmar Contraseña" required />
                     <span class="error-message" id="errorConfirmarContrasena"></span>
                 </div>
             </div>
-
-            @Html.ValidationSummary(false, "", new { @class = "alert alert-danger" })
 
             <div class="d-grid gap-2 mb-3">
                 <button class="btn-submit" type="submit">Registrar</button>
@@ -196,50 +229,98 @@
         </form>
     </div>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
+
+            document.addEventListener('DOMContentLoaded', function () {
+    // Número de Documento: Solo números, máximo 10 caracteres
+    document.getElementById('NumeroDocumento').addEventListener('input', function (e) {
+        const error = document.getElementById('errorNumeroDocumento');
+        if (!/^\d{0,10}$/.test(this.value)) {
+                    error.textContent = 'Solo debe contener hasta 10 dígitos. Solo puede contener números. ';
+            this.value = this.value.replace(/\D/g, '').substring(0, 10); // Quita caracteres no numéricos
+        } else {
+            error.textContent = '';
+        }
+    });
+
+    // Nombre: Solo letras
+    document.getElementById('NombreUsuario').addEventListener('input', function (e) {
+        const error = document.getElementById('errorNombreUsuario');
+        if (!/^[a-zA-Z]*$/.test(this.value)) {
+            error.textContent = 'Solo puede contener letras.';
+            this.value = this.value.replace(/[^a-zA-Z]/g, ''); // Quita caracteres no alfabéticos
+        } else {
+            error.textContent = '';
+        }
+    });
+
+    // Apellido: Solo letras
+    document.getElementById('Apellido').addEventListener('input', function (e) {
+        const error = document.getElementById('errorApellido');
+        if (!/^[a-zA-Z]*$/.test(this.value)) {
+            error.textContent = 'Solo puede contener letras.';
+            this.value = this.value.replace(/[^a-zA-Z]/g, '');
+        } else {
+            error.textContent = '';
+        }
+    });
+
+    // Teléfono: Solo números, máximo 10 caracteres
+    document.getElementById('Telefono').addEventListener('input', function (e) {
+        const error = document.getElementById('errorTelefono');
+        if (!/^\d{0,10}$/.test(this.value)) {
+            error.textContent = 'Solo debe contener hasta 10 dígitos. Solo puede contener números.';
+            this.value = this.value.replace(/\D/g, '').substring(0, 10);
+        } else {
+            error.textContent = '';
+        }
+    });
+
+    // Contraseña: Validación compleja
+    document.getElementById('Contrasena').addEventListener('input', function (e) {
+        const error = document.getElementById('errorContrasena');
+        if (!/(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[\W_]).{10,}/.test(this.value)) {
+            error.textContent = 'Debe tener al menos 10 caracteres, una mayúscula, una minúscula, un número y un carácter especial.';
+        } else {
+            error.textContent = '';
+        }
+
+    });
+});
+
         $(document).ready(function () {
-            // Poblado dinámico de países con la API
-            fetch('https://restcountries.com/v3.1/all')
-                .then(response => response.json())
-                .then(data => {
-                    const paisSelect = $('#Pais');
-                    data.forEach(pais => {
-                        paisSelect.append(new Option(pais.name.common, pais.name.common));
+            $('#Pais').change(function () {
+                var pais = $(this).val();
+                var ciudadDropdown = $('#Ciudad');
+                ciudadDropdown.empty(); // Limpiar las opciones anteriores
+
+                if (pais) {
+                    $.ajax({
+                        url: '/Inicio/ObtenerCiudades',
+                        type: 'GET',
+                        data: { pais: pais },
+                        success: function (ciudades) {
+                            ciudadDropdown.append('<option value="">Seleccione una ciudad</option>');
+                            $.each(ciudades, function (index, ciudad) {
+                                ciudadDropdown.append('<option value="' + ciudad + '">' + ciudad + '</option>');
+                            });
+                        },
+                        error: function () {
+                            alert('Error al cargar las ciudades. Inténtelo nuevamente.');
+                        }
                     });
-                });
-
-            $('#registroForm').on('submit', function (event) {
-                // Aplicar validación visual de Bootstrap
-                $(this).addClass('was-validated');
-
-                // Validar confirmación de contraseña
-                const password = $('input[name="Contrasena"]').val();
-                const confirmPassword = $('#ConfirmarContrasena').val();
-
-                if (password !== confirmPassword) {
-                    event.preventDefault(); // Evitar envío del formulario
-                    $('#errorConfirmarContrasena').text('Las contraseñas no coinciden.');
                 } else {
-                    $('#errorConfirmarContrasena').text(''); // Limpiar el mensaje de error
-                }
-
-                // Validación de solo letras para NombreUsuario y Apellido
-                const nombreUsuario = $('input[name="NombreUsuario"]').val();
-                const apellido = $('input[name="Apellido"]').val();
-
-                if (!/^[A-Za-z]+$/.test(nombreUsuario)) {
-                    event.preventDefault();
-                    alert('El nombre de usuario solo puede contener letras.');
-                }
-
-                if (!/^[A-Za-z]+$/.test(apellido)) {
-                    event.preventDefault();
-                    alert('El apellido solo puede contener letras.');
+                    ciudadDropdown.append('<option value="">Seleccione un país primero</option>');
                 }
             });
+
+
+
         });
+
     </script>
 </body>
 </html>

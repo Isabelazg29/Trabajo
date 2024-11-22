@@ -5,13 +5,11 @@
 }
 
 <div class="container mt-4" style="max-width: 1000px;">
-    <h2 class="text-center" style="color: #1a4a5a;">Crear Rol</h2>
-
-    <form asp-action="Create" class="mt-4">
+    <form asp-action="Create" class="mt-4" onsubmit="return validateForm()">
         <div class="row mb-3 align-items-end">
             <div class="col-md-6">
                 <label asp-for="Nombre" class="form-label">Nombre del Rol</label>
-                <input asp-for="Nombre" class="form-control" placeholder="Ingrese el nombre del rol" />
+                <input asp-for="Nombre" class="form-control" id="nombreRol" placeholder="Ingrese el nombre del rol" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
             <div class="col-md-6">
@@ -22,8 +20,11 @@
 
         <div class="col-md-12 mb-3">
             <div class="form-check mb-2">
-                <input type="checkbox" id="selectAll" class="form-check-input" onclick="toggleSelectAll()" />
-                <label for="selectAll" class="form-check-label">Seleccionar todo</label>
+                <label class="switch">
+                    <input type="checkbox" id="selectAll" class="permiso-checkbox" onclick="toggleSelectAll()" />
+                    <span class="slider round"></span>
+                </label>
+                <label for="selectAll" class="form-check-label ms-2">Seleccionar todo</label>
             </div>
             <label class="form-label">Permisos:</label>
             <div class="permissions-container p-3">
@@ -40,6 +41,7 @@
                     }
                 </div>
             </div>
+            <div id="validationMessage" class="text-danger mt-2" style="display: none;"></div> <!-- Aquí se mostrarán los mensajes de validación -->
         </div>
 
         <div class="d-flex justify-content-center mt-4 gap-2">
@@ -55,7 +57,7 @@
         padding: 20px;
         border-radius: 10px;
         box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
-        margin-top: 20px;
+        margin-top: 30px;
     }
 
     .permissions-container {
@@ -110,6 +112,11 @@
             transform: translateX(20px);
         }
 
+    /* Estilo adicional para los checkboxes de "Seleccionar todo" y permisos */
+    .permiso-checkbox {
+        margin: 0;
+    }
+
     .btn {
         transition: background-color 0.3s;
     }
@@ -120,6 +127,30 @@
 </style>
 
 <script>
+    function validateForm() {
+        const nombreRol = document.getElementById("nombreRol").value.trim();
+        const checkboxes = document.querySelectorAll(".permiso-checkbox:checked");
+        const validationMessage = document.getElementById("validationMessage");
+
+        // Limpiar cualquier mensaje previo
+        validationMessage.style.display = 'none';
+        validationMessage.innerText = '';
+
+        if (nombreRol === "") {
+            validationMessage.style.display = 'block';
+            validationMessage.innerText = "Debe ingresar un nombre para el rol.";
+            return false;
+        }
+
+        if (checkboxes.length === 0) {
+            validationMessage.style.display = 'block';
+            validationMessage.innerText = "Debe seleccionar al menos un permiso.";
+            return false;
+        }
+
+        return true;
+    }
+
     function filterPermissions() {
         const searchValue = document.getElementById("permissionSearch").value.toLowerCase();
         const permissions = document.querySelectorAll(".permission-item");

@@ -1556,3 +1556,4 @@ C:\Users\isabe\Downloads\camila-main\Glamping_Addventure2\obj\Debug\net8.0\ref\G
 C:\Users\isabe\Downloads\camila-main\Glamping_Addventure2\bin\Debug\net8.0\BouncyCastle.Cryptography.dll
 C:\Users\isabe\Downloads\camila-main\Glamping_Addventure2\bin\Debug\net8.0\MailKit.dll
 C:\Users\isabe\Downloads\camila-main\Glamping_Addventure2\bin\Debug\net8.0\MimeKit.dll
+C:\Users\isabe\Downloads\camila-main\Glamping_Addventure2\obj\Debug\net8.0\Glamping_Addventure2.sourcelink.json

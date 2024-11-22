@@ -1,5 +1,6 @@
 ﻿using MailKit.Net.Smtp;
 using MimeKit;
+using System;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 
@@ -33,13 +34,17 @@ namespace Glamping_Addventure2.Services
                     var smtpUser = _configuration["Email:SmtpUsername"];
                     var smtpPass = _configuration["Email:SmtpPassword"];
 
+                    // Conexión al servidor SMTP
                     await client.ConnectAsync(smtpServer, smtpPort, MailKit.Security.SecureSocketOptions.StartTls);
+
+                    // Autenticación
                     await client.AuthenticateAsync(smtpUser, smtpPass);
 
+                    // Enviar el mensaje
                     await client.SendAsync(emailMessage);
-                    await client.DisconnectAsync(true);
-
                     Console.WriteLine("Correo enviado exitosamente.");
+
+                    await client.DisconnectAsync(true);
                 }
                 catch (Exception ex)
                 {

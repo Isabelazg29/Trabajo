@@ -730,6 +730,9 @@ namespace Glamping_Addventure2.Migrations
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
 
+                    b.Property<string>("Ciudad")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<string>("Contrasena")
                         .HasMaxLength(100)
                         .IsUnicode(false)

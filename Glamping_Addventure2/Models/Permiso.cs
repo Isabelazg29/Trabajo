@@ -10,8 +10,6 @@ public partial class Permiso
     public string? NombrePermisos { get; set; }
     public string? EstadoPermisos { get; set; }
     public string? Descripcion { get; set; }
-
-    // Nueva propiedad para manejar el estado activo
     public bool IsActive { get; set; }
 
     public virtual ICollection<RolesPermiso> RolesPermisos { get; set; } = new List<RolesPermiso>();

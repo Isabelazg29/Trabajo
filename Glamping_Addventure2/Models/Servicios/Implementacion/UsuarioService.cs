@@ -44,6 +44,13 @@ namespace Glamping_Addventure.Models.Servicios.Implementación
                 .ToListAsync();
         }
 
+        public async Task<Role> GetRolPorId(int Idrol)
+        {
+            // Lógica para obtener el rol por su ID
+            var rol = await _dbContext.Roles.FindAsync(Idrol);  // Suponiendo que usas Entity Framework
+            return rol;
+        }
+
         public async Task<int> GetTotalUsuarios()
         {
             return await _dbContext.Usuarios.CountAsync();

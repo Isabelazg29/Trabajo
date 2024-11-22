@@ -2,6 +2,9 @@
 using Glamping_Addventure2.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using Glamping_Addventure.Models.Recursos;
+using Glamping_Addventure.Models.Servicios.Contrato;
+using Glamping_Addventure.Models.Servicios.Implementación;
 
 namespace Glamping_Addventure2.Controllers
 {
@@ -9,11 +12,14 @@ namespace Glamping_Addventure2.Controllers
     public class UsuariosController : Controller
     {
         private readonly GlampingAddventureContext _context;
+        private readonly IUsuarioService _usuarioServicio;
 
-        public UsuariosController(GlampingAddventureContext context)
+        public UsuariosController(GlampingAddventureContext context, IUsuarioService usuarioServicio)
         {
             _context = context;
+            _usuarioServicio = usuarioServicio;
         }
+
 
         // GET: Usuarios
         public IActionResult Index()
@@ -26,35 +32,57 @@ namespace Glamping_Addventure2.Controllers
         public IActionResult Create()
         {
             ViewBag.Roles = _context.Roles.ToList();
-            return View();
+            return View(); // Este método cargará la vista con los roles disponibles.
         }
 
         // POST: Usuarios/Create
+        // POST: Usuarios/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create([Bind("NombreUsuario,Email,Apellido,TipoDocumento,NumeroDocumento,Direccion,Telefono,Idrol,Contrasena")] Usuario usuario)
+        public async Task<IActionResult> Create([Bind("NombreUsuario,Email,Apellido,TipoDocumento,NumeroDocumento,Direccion,Telefono,Idrol,Contrasena")] Usuario usuario, int Idrol, string confirmarContrasena)
         {
+            if (Idrol <= 0)
+            {
+                ModelState.AddModelError("Idrol", "Debe seleccionar un tipo de rol.");
+            }
+
+            if (string.IsNullOrWhiteSpace(confirmarContrasena) || usuario.Contrasena != confirmarContrasena)
+            {
+                ModelState.AddModelError("Contrasena", "Las contraseñas no coinciden.");
+            }
+
             if (_context.Usuarios.Any(u => u.Email == usuario.Email))
             {
-                ViewData["Mensaje"] = "El correo ya existe y no se puede registrar.";
-                ViewBag.Roles = _context.Roles.ToList(); 
+                ModelState.AddModelError("Email", "El correo electrónico ya está registrado.");
+            }
+
+            if (_context.Usuarios.Any(u => u.NumeroDocumento == usuario.NumeroDocumento))
+            {
+                ModelState.AddModelError("NumeroDocumento", "El número de documento ya está registrado.");
+            }
+
+            if (!ModelState.IsValid)
+            {
+                ViewBag.Roles = _context.Roles.ToList(); // Para mantener los roles en el formulario
                 return View(usuario);
             }
 
-            if (ModelState.IsValid)
-            {
-                usuario.Contrasena = HashPassword(usuario.Contrasena);
+            usuario.Contrasena = Utilidades.EncriptarClave(usuario.Contrasena);
+            usuario.Idrol = Idrol;
 
-                _context.Add(usuario);
-                _context.SaveChanges();
-                return RedirectToAction(nameof(Index));
+            Usuario usuario_creado = await _usuarioServicio.SaveUsuario(usuario);
+            if (usuario_creado != null && usuario_creado.Idusuario > 0)
+            {
+                return RedirectToAction("Index");  // Redirige al Index de Usuarios
             }
 
-            ViewBag.Roles = _context.Roles.ToList();
+            ModelState.AddModelError("", "No se pudo crear el usuario.");
+            ViewBag.Roles = _context.Roles.ToList(); // Mantener los roles en la vista
             return View(usuario);
         }
 
-        
+
+
         private string HashPassword(string password)
         {
             return BCrypt.Net.BCrypt.HashPassword(password);
@@ -74,7 +102,7 @@ namespace Glamping_Addventure2.Controllers
             {
                 return NotFound();
             }
-            ViewBag.Roles = _context.Roles.ToList(); 
+            ViewBag.Roles = _context.Roles.ToList();
             return View(usuario);
         }
 
@@ -93,7 +121,6 @@ namespace Glamping_Addventure2.Controllers
                 var usuarioExistente = _context.Usuarios.Find(id);
                 if (usuarioExistente != null)
                 {
-                    
                     usuarioExistente.NombreUsuario = usuario.NombreUsuario;
                     usuarioExistente.Email = usuario.Email;
                     usuarioExistente.Apellido = usuario.Apellido;
@@ -108,7 +135,7 @@ namespace Glamping_Addventure2.Controllers
                     return RedirectToAction(nameof(Index));
                 }
             }
-            ViewBag.Roles = _context.Roles.ToList(); 
+            ViewBag.Roles = _context.Roles.ToList();
             return View(usuario);
         }
 

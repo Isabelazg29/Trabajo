@@ -6,7 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Glamping_Addventure.Models.Servicios.Contrato;
 using Glamping_Addventure.Models.Servicios.Implementación;
-using Microsoft.AspNetCore.Authentication; 
+using Microsoft.AspNetCore.Authentication;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,15 +20,17 @@ builder.Services.AddDbContext<GlampingAddventureContext>(options =>
 // Registra servicios personalizados
 builder.Services.AddScoped<IUsuarioService, UsuarioService>();
 builder.Services.AddScoped<IEmailService, EmailService>(); // Asegúrate de registrar el servicio de correo
+builder.Services.AddScoped<IUsuarioService, UsuarioService>();
+
 
 // Configuración de autenticación
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
-        options.LoginPath = "/Inicio/IniciarSesion";
-        options.AccessDeniedPath = "/Home/Index"; // Redirigir a la acción AccessDenied en RolesController
+        options.LoginPath = "/Inicio/IniciarSesion";  // Redirige a esta página si no está autenticado
+        options.AccessDeniedPath = "/Home/Index"; // Redirige a una página de acceso denegado
         options.ExpireTimeSpan = TimeSpan.FromMinutes(20);
-        options.SlidingExpiration = true; // Permite renovar el tiempo de sesión al interactuar
+        options.SlidingExpiration = true; // Permite renovar la sesión si el usuario está activo
     });
 
 // Configuración de autorización para roles
@@ -63,27 +65,16 @@ var app = builder.Build();
 app.UseSession(); // Asegúrate de usar la sesión antes de usar el middleware
 app.UseMiddleware<SessionTimeoutMiddleware>(); // Añadir el middleware de sesión
 
-// Configure the HTTP request pipeline.
-if (!app.Environment.IsDevelopment())
-{
-    app.UseExceptionHandler("/Home/Error");
-    app.UseHsts(); // Puedes añadir HSTS para mejorar el seguridad
-}
-
-app.UseHttpsRedirection(); // Asegúrate de redirigir a HTTPS
-app.UseStaticFiles();
-
-app.UseRouting();
-
+// Configura el middleware para asegurar que los usuarios no autenticados sean redirigidos
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Configura las rutas de los controladores
+// Configuración de rutas para la aplicación
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Inicio}/{action=IniciarSesion}/{id?}");
 
-// Ruta para el controlador de recuperación (sin prefijo api)
+// Ruta para el controlador de recuperación de contraseña
 app.MapControllerRoute(
     name: "recuperacion",
     pattern: "Recuperacion/{action=SolicitarRecuperacion}/{id?}",
@@ -111,7 +102,7 @@ public class SessionTimeoutMiddleware
                 var lastActivity = DateTime.Parse(lastActivityString);
                 if (DateTime.UtcNow - lastActivity > TimeSpan.FromMinutes(20)) // Cambia el tiempo aquí según tu necesidad
                 {
-                    await Logout(context);
+                    await Logout(context); // Cerrar sesión si la sesión ha expirado
                 }
             }
 
@@ -124,7 +115,7 @@ public class SessionTimeoutMiddleware
 
     private async Task Logout(HttpContext context)
     {
-        await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-        context.Response.Redirect("/Inicio/IniciarSesion");
+        await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme); // Cerrar sesión
+        context.Response.Redirect("/Inicio/IniciarSesion"); // Redirigir a la página de inicio de sesión
     }
 }

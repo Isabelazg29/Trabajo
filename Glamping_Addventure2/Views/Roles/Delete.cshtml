@@ -8,108 +8,102 @@
 <html lang="es">
 <head>
     <meta charset="utf-8" />
-    <title>Eliminar Rol</title>
-    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" />
     <style>
-        /* Diseño principal */
+        /* Estilos principales */
         body {
             font-family: Arial, sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* Ocupa el 100% de la altura de la ventana */
-            margin: 0; /* Elimina el margen del body */
-            padding: 0; /* Elimina el padding del body */
-            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%); /* Fondo con degradado */
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #a8e6cf 0%, #dcedc1 100%);
         }
 
         .delete-box {
-            background: rgba(255, 255, 255, 0.9); /* Fondo semi-transparente */
-            padding: 40px; /* Espaciado interno */
-            border-radius: 16px; /* Bordes redondeados */
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1); /* Sombra para profundidad */
-            width: 100%; /* Ancho completo */
-            max-width: 1200px; /* Ancho máximo */
-            text-align: center; /* Centrado del texto */
-        }
-
-        h1 {
-            color: #333; /* Color del título */
-            font-size: 24px; /* Tamaño del título */
-            margin-bottom: 20px; /* Margen inferior */
-        }
-
-        h3 {
-            font-size: 18px; /* Tamaño de la pregunta */
-            margin-bottom: 20px; /* Margen inferior */
-            color: #555; /* Color de la pregunta */
-        }
-
-        dl.row {
-            margin-bottom: 20px; /* Margen inferior */
-            text-align: left; /* Alineación izquierda */
+            background: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            text-align: center;
         }
 
         .btn-danger {
-            background-color: #d9534f; /* Color de fondo del botón eliminar */
-            color: #fff; /* Color del texto */
-            border: none; /* Sin borde */
-            transition: background 0.3s ease; /* Transición suave */
+            background-color: #d9534f;
+            color: #fff;
+            border: none;
         }
-
-            .btn-danger:hover {
-                background-color: #c9302c; /* Color de fondo al pasar el mouse */
-            }
-
-        .btn-secondary {
-            background: #6c757d; /* Color de fondo del botón cancelar */
-            color: #fff; /* Color del texto */
-        }
-
-            .btn-secondary:hover {
-                background: #5a6268; /* Color de fondo al pasar el mouse */
-            }
     </style>
 </head>
 <body>
     <div class="delete-box">
-        <h2>Eliminar Rol</h2>
-        <p>¿Estás seguro de que deseas eliminar el rol "<strong>@Model.Nombre</strong>"? Esta acción no se puede deshacer.</p>
+        <p>¿Deseas eliminar el rol "<strong>@Model.Nombre</strong>"? Esta acción no se puede deshacer.</p>
 
         @if (ViewBag.HasUsers)
         {
-            <div class="alert alert-warning">
-                Este rol está asociado a uno o más usuarios.
-            </div>
+            <!-- Modal cuando el rol está asociado a usuarios -->
+            <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#roleAssociatedModal">
+                Eliminar
+            </button>
+            <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
         }
-
-        <form asp-action="Delete" method="post" id="deleteForm" class="text-center mt-4 d-flex justify-content-center gap-2">
-            <input type="hidden" asp-for="Idrol" />
-            <div class="d-flex justify-content-center mt-3">
-                <button type="submit" class="btn btn-danger me-2">Eliminar</button>
+        else
+        {
+            <!-- Si no está asociado a usuarios, procedemos con la eliminación -->
+            <form asp-action="Delete" method="post" id="deleteForm">
+                <input type="hidden" asp-for="Idrol" />
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#confirmDeleteModal">Eliminar</button>
                 <a asp-action="Index" class="btn btn-secondary">Cancelar</a>
-            </div>
-        </form>
+            </form>
+        }
     </div>
 
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
-    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Modal cuando el rol está asociado a usuarios -->
+    <div class="modal fade" id="roleAssociatedModal" tabindex="-1" aria-labelledby="roleAssociatedModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="roleAssociatedModalLabel">No se puede eliminar el rol</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Este rol está asociado a uno o más usuarios y no puede ser eliminado.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de confirmación para la eliminación -->
+    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="confirmDeleteModalLabel">Confirmar eliminación</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    ¿Estás seguro de que deseas eliminar este rol? Esta acción no se puede deshacer.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-danger" id="confirmDeleteButton">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
     <script>
-        document.getElementById("deleteButton").addEventListener("click", function (event) {
-            // Verificar si hay usuarios asociados
-            var hasUsers = @Html.Raw(ViewBag.HasUsers.ToString().ToLower());
-
-            if (hasUsers) {
-                // Prevenir el envío del formulario
-                event.preventDefault();
-
-                // Mostrar mensaje de confirmación
-                var confirmDelete = confirm("Este rol está asociado a uno o más usuarios. ¿Estás seguro de que deseas continuar con la eliminación?");
-                if (confirmDelete) {
-                    // Si el usuario confirma, enviar el formulario
-                    document.getElementById("deleteForm").submit();
-                }
-            }
+        // Submit form when delete is confirmed
+        document.getElementById("confirmDeleteButton").addEventListener("click", function () {
+            document.getElementById("deleteForm").submit();
         });
     </script>
 </body>

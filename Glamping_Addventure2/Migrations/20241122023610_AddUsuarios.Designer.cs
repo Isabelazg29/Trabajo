@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Glamping_Addventure2.Migrations
 {
     [DbContext(typeof(GlampingAddventureContext))]
-    [Migration("20241109175717_AddTokenRecuperacion")]
-    partial class AddTokenRecuperacion
+    [Migration("20241122023610_AddUsuarios")]
+    partial class AddUsuarios
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -732,6 +732,9 @@ namespace Glamping_Addventure2.Migrations
                         .HasMaxLength(50)
                         .IsUnicode(false)
                         .HasColumnType("varchar(50)");
+
+                    b.Property<string>("Ciudad")
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Contrasena")
                         .HasMaxLength(100)

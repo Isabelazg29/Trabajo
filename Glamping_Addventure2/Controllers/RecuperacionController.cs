@@ -1,5 +1,6 @@
 ﻿using Glamping_Addventure2.Models;
 using Glamping_Addventure2.Services;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Text.RegularExpressions;
@@ -7,6 +8,8 @@ using System.Threading.Tasks;
 
 namespace Glamping_Addventure2.Controllers
 {
+    [AllowAnonymous]
+   
     [Route("Recuperacion/[action]")]
     public class RecuperacionController : Controller
     {

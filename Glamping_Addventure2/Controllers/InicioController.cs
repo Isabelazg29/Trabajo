@@ -5,6 +5,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using Glamping_Addventure2.Models;
+using System.Text.RegularExpressions;
 
 namespace Glamping_Addventure.Controllers
 {
@@ -23,52 +24,92 @@ namespace Glamping_Addventure.Controllers
         {
             return View();
         }
+
         [HttpPost]
         public async Task<IActionResult> Registrarse(Usuario modelo, int Idrol, string confirmarContrasena)
         {
-            // Validar selección de rol
-            if (Idrol <= 0)
+            // Validar si el modelo es nulo o tiene errores
+            if (modelo == null)
             {
-                ModelState.AddModelError("Idrol", "Debe seleccionar un tipo de rol.");
+                ModelState.AddModelError("", "El formulario no es válido.");
+                return View(modelo);
             }
 
-            // Validar coincidencia de contraseñas
-            if (string.IsNullOrWhiteSpace(confirmarContrasena) || modelo.Contrasena != confirmarContrasena)
+            // Validar si se seleccionó un rol
+            if (Idrol <= 0)
+            {
+                ModelState.AddModelError("Idrol", "Debe seleccionar un rol.");
+            }
+            else
+            {
+                // Verificar si el rol está activo
+                var rol = await _usuarioServicio.GetRolPorId(Idrol);
+                if (rol == null)
+                {
+                    ModelState.AddModelError("Idrol", "El rol seleccionado no existe.");
+                }
+                else if (!rol.IsActive)
+                {
+                    ModelState.AddModelError("Idrol", "El rol seleccionado está inactivo.");
+                }
+            }
+
+            // Validación de contraseñas
+            if (string.IsNullOrWhiteSpace(modelo.Contrasena))
+            {
+                ModelState.AddModelError("Contrasena", "La contraseña no puede estar vacía.");
+            }
+            else if (modelo.Contrasena != confirmarContrasena)
             {
                 ModelState.AddModelError("Contrasena", "Las contraseñas no coinciden.");
             }
 
-            // Validar existencia de email y documento
-            var usuarioExistente = await _usuarioServicio.GetUsuarioPorEmail(modelo.Email);
-            if (usuarioExistente != null)
+            // Validar si el correo ya está registrado
+            if (!string.IsNullOrWhiteSpace(modelo.Email))
             {
-                ModelState.AddModelError("Email", "El correo electrónico ya está registrado.");
+                var usuarioExistente = await _usuarioServicio.GetUsuarioPorEmail(modelo.Email);
+                if (usuarioExistente != null)
+                {
+                    ModelState.AddModelError("Email", "El correo electrónico ya está registrado.");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("Email", "Debe proporcionar un correo electrónico válido.");
             }
 
-            var documentoExistente = await _usuarioServicio.GetUsuarioPorDocumento(modelo.NumeroDocumento);
-            if (documentoExistente != null)
+            // Validar si el número de documento ya está registrado
+            if (!string.IsNullOrWhiteSpace(modelo.NumeroDocumento?.ToString()))
             {
-                ModelState.AddModelError("NumeroDocumento", "El número de documento ya está registrado.");
+                var documentoExistente = await _usuarioServicio.GetUsuarioPorDocumento(modelo.NumeroDocumento);
+                if (documentoExistente != null)
+                {
+                    ModelState.AddModelError("NumeroDocumento", "El número de documento ya está registrado.");
+                }
             }
 
+            // Si hay errores de validación, retornar la vista con el modelo
             if (!ModelState.IsValid)
             {
                 return View(modelo);
             }
 
+            // Encriptar la contraseña antes de guardarla
             modelo.Contrasena = Utilidades.EncriptarClave(modelo.Contrasena);
             modelo.Idrol = Idrol;
 
-            Usuario usuario_creado = await _usuarioServicio.SaveUsuario(modelo);
-            if (usuario_creado != null && usuario_creado.Idusuario > 0)
+            // Guardar el usuario en la base de datos
+            Usuario usuarioCreado = await _usuarioServicio.SaveUsuario(modelo);
+            if (usuarioCreado != null && usuarioCreado.Idusuario > 0)
             {
+                TempData["MensajeExito"] = "Usuario creado exitosamente.";
                 return RedirectToAction("IniciarSesion", "Inicio");
             }
 
-            ModelState.AddModelError("", "No se pudo crear el usuario.");
+            // Si no se pudo crear el usuario, retornar un mensaje de error
+            ModelState.AddModelError("", "Ocurrió un error al intentar registrar el usuario.");
             return View(modelo);
         }
-
 
         public IActionResult IniciarSesion()
         {
@@ -118,8 +159,25 @@ namespace Glamping_Addventure.Controllers
             return BCrypt.Net.BCrypt.Verify(plainTextPassword, hashedPassword);
         }
 
+        [HttpGet]
+        public IActionResult ObtenerCiudades(string pais)
+        {
+            var ciudades = new Dictionary<string, List<string>>
+    {
+        { "Colombia", new List<string> { "Bogotá", "Medellín", "Cali" } },
+        { "Estados Unidos", new List<string> { "Nueva York", "Los Ángeles", "Chicago" } },
+        { "España", new List<string> { "Madrid", "Barcelona", "Valencia" } },
+        { "México", new List<string> { "Ciudad de México", "Guadalajara", "Monterrey" } },
+    };
+
+            if (ciudades.ContainsKey(pais))
+            {
+                return Json(ciudades[pais]);
+            }
+
+            return Json(new List<string>()); // Retorna una lista vacía si no hay ciudades para el país
+        }
+
 
     }
-
-
 }

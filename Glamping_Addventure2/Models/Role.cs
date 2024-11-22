@@ -6,7 +6,7 @@ namespace Glamping_Addventure2.Models;
 public partial class Role
 {
     public int Idrol { get; set; }
-    
+
     public string? Nombre { get; set; }
 
     public string? Estado { get; set; }

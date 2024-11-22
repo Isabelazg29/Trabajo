@@ -5,16 +5,13 @@
 }
 
 <div class="container mt-4" style="max-width: 1000px;">
-    <h2 class="text-center" style="color: #1a4a5a;">Editar Rol</h2>
-
-    <form asp-action="Edit" method="post" class="mt-4">
+    <form asp-action="Edit" method="post" class="mt-4" onsubmit="return validateEditForm()">
         <input type="hidden" asp-for="Idrol" />
 
-        <!-- Campo Nombre y Buscador en la misma fila -->
         <div class="row mb-3 align-items-end">
             <div class="col-md-6">
                 <label asp-for="Nombre" class="form-label">Nombre del Rol</label>
-                <input asp-for="Nombre" class="form-control form-control-sm" placeholder="Ingrese el nombre del rol" />
+                <input asp-for="Nombre" class="form-control form-control-sm" id="nombreRol" placeholder="Ingrese el nombre del rol" />
                 <span asp-validation-for="Nombre" class="text-danger"></span>
             </div>
             <div class="col-md-6">
@@ -23,7 +20,6 @@
             </div>
         </div>
 
-        <!-- Sección de Seleccionar todo y Permisos -->
         <div class="col-md-12 mb-3">
             <div class="form-check mb-2">
                 <input type="checkbox" id="selectAll" class="form-check-input" onclick="toggleSelectAll()" />
@@ -45,16 +41,15 @@
                     }
                 </div>
             </div>
+            <div id="validationMessage" class="text-danger mt-2" style="display: none;"></div> <!-- Mensajes de validación -->
         </div>
 
-        <!-- Botones alineados y centrados -->
         <div class="d-flex justify-content-center mt-3 gap-2">
             <button type="submit" class="btn btn-success btn-sm">Editar Rol</button>
             <a asp-action="Index" class="btn btn-secondary btn-sm">Cancelar</a>
         </div>
     </form>
 </div>
-
 <!-- Estilos adicionales -->
 <style>
     /* Contenedor general */
@@ -130,8 +125,44 @@
     }
 </style>
 
-<!-- Scripts para el buscador y seleccionar todo -->
 <script>
+    // Lista simulada de nombres de roles existentes (esto debe venir del servidor)
+    const existingRoles = @Html.Raw(Newtonsoft.Json.JsonConvert.SerializeObject(ViewBag.ExistingRoles ?? new List<string>()));
+
+    function validateEditForm() {
+        const nombreRol = document.getElementById("nombreRol").value.trim();
+        const checkboxes = document.querySelectorAll(".permiso-checkbox:checked");
+        const validationMessage = document.getElementById("validationMessage");
+
+        // Limpiar mensajes previos
+        validationMessage.style.display = 'none';
+        validationMessage.innerText = '';
+
+        // Validar que el nombre no esté vacío
+        if (nombreRol === "") {
+            validationMessage.style.display = 'block';
+            validationMessage.innerText = "Debe ingresar un nombre para el rol.";
+            return false;
+        }
+
+        // Validar que el nombre no se repita (excepto el nombre actual del rol)
+        const currentRoleName = "@Model.Nombre";
+        if (existingRoles.includes(nombreRol) && nombreRol !== currentRoleName) {
+            validationMessage.style.display = 'block';
+            validationMessage.innerText = "Ya existe un rol con este nombre.";
+            return false;
+        }
+
+        // Validar que al menos un permiso esté seleccionado
+        if (checkboxes.length === 0) {
+            validationMessage.style.display = 'block';
+            validationMessage.innerText = "Debe seleccionar al menos un permiso.";
+            return false;
+        }
+
+        return true;
+    }
+
     function filterPermissions() {
         const searchValue = document.getElementById("permissionSearch").value.toLowerCase();
         const permissions = document.querySelectorAll(".permission-item");
